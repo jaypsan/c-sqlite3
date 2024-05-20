@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1716164881 source:c:\users\joaop\documents\workspace\unip\pim iv\project\main.c
+	<stdio.h>
+	<stdlib.h>
+	<sqlite3.h>
+	<stdbool.h>
+
