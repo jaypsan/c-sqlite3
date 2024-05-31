@@ -49,3 +49,7 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# output txt files
+project/*.txt
+project/*.db
