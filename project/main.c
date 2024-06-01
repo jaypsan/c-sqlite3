@@ -9,7 +9,6 @@
 
 sqlite3 *db;
 
-
 int setup(){
     printf("Running setup...");
     char query[] =
@@ -38,8 +37,6 @@ int setup(){
 int main()
 {
     setup();
-    //createClient("99.999.999/9999-99", "test s/s ltda", "test");
-    //selectWastesByDate(5, 2024);
     printf("Welcome!\n");
     char login[10] = "admin";
     char senha[10] = "admin";
@@ -73,9 +70,11 @@ int main()
         if (opt == 1){
             getchar(); // consume the last Enter key input
             printf("--- Cadastro de Cliente ---\n");
+            // Declare variables
             char cnpj[20];
             char rs[50];
             char nf[50];
+            // Get user inputs
             printf("CNPJ: ");
             fgets(cnpj, sizeof cnpj, stdin);
             printf("Razao Social: ");
@@ -86,15 +85,18 @@ int main()
             strtok(cnpj, "\n\r");
             strtok(rs, "\n\r");
             strtok(nf, "\n\r");
+            // execute database operations
             createClient(cnpj, rs, nf);
         } else if (opt == 2) {
             getchar(); // consume the last Enter key input
             printf("--- Cadastro de Residuos ---\n");
+            // Declare variables
             char cnpj[20];
             int qtd;
             double value;
             int month;
             int year;
+            // Get user inputs
             printf("CNPJ da Empresa: ");
             fgets(cnpj, sizeof cnpj, stdin);
             printf("Quantidade: ");
@@ -105,17 +107,21 @@ int main()
             scanf("%d", &month);
             printf("Ano: ");
             scanf("%d", &year);
+            // execute database operations
             insertWaste(1, qtd, value, month, year);
         }
         else if (opt == 3) {
             getchar(); // consume the last Enter key input
             printf("--- Emitir Relatorio Mensal ---\n");
+            // Declare variables
             int month;
             int year;
+            // get user inputs
             printf("Mes: ");
             scanf("%d", &month);
             printf("Ano: ");
             scanf("%d", &year);
+            // execute database operations
             selectWastesByDate(month, year);
         }
         else if (opt == 0) {
@@ -127,6 +133,8 @@ int main()
     }
     return 0;
 }
+
+// --- sqlite callback functions ---
 
 int The_Callback(void *a_param, int argc, char **argv, char **column){
     for (int i=0; i< argc; i++)
@@ -147,6 +155,8 @@ int saveFileCallback(void *a_param, int argc, char **argv, char **column){
     fclose(file);
     return 0;
 }
+
+// --- database operations functions ---
 
 int createClient(char cnpj[20], char razao_social[50], char nome_fantasia[50]) {
     try{
