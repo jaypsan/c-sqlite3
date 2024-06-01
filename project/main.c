@@ -93,7 +93,7 @@ int main()
             // Declare variables
             char cnpj[20];
             int qtd;
-            double value;
+            int value;
             int month;
             int year;
             // Get user inputs
@@ -102,7 +102,7 @@ int main()
             printf("Quantidade: ");
             scanf("%d", &qtd);
             printf("Valor: ");
-            scanf("%lf", &value);
+            scanf("%d", &value);
             printf("Mes: ");
             scanf("%d", &month);
             printf("Ano: ");
@@ -178,14 +178,13 @@ int createClient(char cnpj[20], char razao_social[50], char nome_fantasia[50]) {
     }
 }
 
-int insertWaste(int client_id, int quantity, double value, int month, int year){
+int insertWaste(int client_id, int quantity, int value, int month, int year){
     try{
         sqlite3_open("sqlite.db", &db);
         char* query = sqlite3_mprintf(
-            "INSERT INTO waste(client_id, quantity, value, month, year) VALUES(%d, %d, %f, %d, %d)"
+            "INSERT INTO waste(client_id, quantity, value, month, year) VALUES(%d, %d, %d, %d, %d)"
             , client_id, quantity, value, month, year
         );
-
         sqlite3_exec(db, query, The_Callback, NULL, NULL);
         printf("Residuo cadastrado com sucesso: \n");
         sqlite3_exec(db, "SELECT a.id, b.cnpj, b.razao_social, quantity, value, month, year"
