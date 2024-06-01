@@ -10,7 +10,7 @@
 sqlite3 *db;
 
 int setup(){
-    printf("Running setup...");
+    printf("Running setup... \n");
     char query[] =
         "CREATE TABLE IF NOT EXISTS  "
         "clients("
@@ -37,7 +37,7 @@ int setup(){
 int main()
 {
     setup();
-    printf("Welcome!\n");
+    printf("\nWelcome!!! \n");
     char login[10] = "admin";
     char senha[10] = "admin";
     int opt;
