@@ -22,7 +22,7 @@ int setup(){
         "CREATE TABLE IF NOT EXISTS  "
         "waste("
             "id INTEGER PRIMARY KEY"
-            ", client_id INTEGER NOT NULL"
+            ", cnpj VARCHAR(20) NOT NULL"
             ", quantity INTEGER NOT NULL"
             ", value INTEGER NOT NULL"
             ", month SMALLINT NOT NULL"
@@ -107,8 +107,10 @@ int main()
             scanf("%d", &month);
             printf("Ano: ");
             scanf("%d", &year);
+            // Remove line breaks
+            strtok(cnpj, "\n\r");
             // execute database operations
-            insertWaste(1, qtd, value, month, year);
+            insertWaste(cnpj, qtd, value, month, year);
         }
         else if (opt == 3) {
             getchar(); // consume the last Enter key input
@@ -178,18 +180,17 @@ int createClient(char cnpj[20], char razao_social[50], char nome_fantasia[50]) {
     }
 }
 
-int insertWaste(int client_id, int quantity, int value, int month, int year){
+int insertWaste(char cnpj[20], int quantity, int value, int month, int year){
     try{
         sqlite3_open("sqlite.db", &db);
         char* query = sqlite3_mprintf(
-            "INSERT INTO waste(client_id, quantity, value, month, year) VALUES(%d, %d, %d, %d, %d)"
-            , client_id, quantity, value, month, year
+            "INSERT INTO waste(cnpj, quantity, value, month, year) VALUES(%Q, %d, %d, %d, %d)"
+            , cnpj, quantity, value, month, year
         );
         sqlite3_exec(db, query, The_Callback, NULL, NULL);
         printf("Residuo cadastrado com sucesso: \n");
-        sqlite3_exec(db, "SELECT a.id, b.cnpj, b.razao_social, quantity, value, month, year"
+        sqlite3_exec(db, "SELECT trim(cnpj), quantity, value, month, year"
             " FROM waste a"
-            " INNER JOIN clients b ON a.client_id = b.id"
             " WHERE ROWID = last_insert_rowid()"
         , The_Callback, NULL, NULL);
         sqlite3_free(query);
@@ -205,9 +206,8 @@ int selectWastesByDate(int month, int year) {
     try{
         sqlite3_open("sqlite.db", &db);
         char* query = sqlite3_mprintf(
-            "SELECT a.id, b.cnpj, b.razao_social, quantity, value, month, year"
+            "SELECT cnpj, quantity, value, month, year"
             " FROM waste a"
-            " INNER JOIN clients b ON a.client_id = b.id"
             " WHERE a.month like %d and a.year like %d"
             , month, year
         );
